@@ -87,6 +87,8 @@ For reference lab tests of giant kelp show this reflectance spectrum [1]
 
 # Chandler Cove
 
+Great cove name!
+
 I did not do new analysis on this farm, however I was pleased that the code base was able to process the dataset without modification. This harvest dates to 2020 and therefore no 8 band captures exist, only 4 band. The scene.py code smooths over these differences to enable reusability in the visualization code.
 
 ![farm](./images/chandler_cove.gif)
