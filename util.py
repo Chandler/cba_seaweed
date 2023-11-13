@@ -65,7 +65,7 @@ def mask_image(image, polygon, crs, transform, crop=True):
     with MemoryFile() as memfile:
         with memfile.open(**metadata) as ds:
             ds.write(image, indexes=1)
-            out_image, out_transform = mask(ds, gdf.geometry.values, crop=crop)
+            out_image, out_transform = mask(ds, polygon.geometry.values, crop=crop)
             return out_image[0], out_transform
 
 

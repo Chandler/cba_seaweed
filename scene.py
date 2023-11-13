@@ -178,6 +178,13 @@ class Dove4BandScene(BaseScene):
     """
     band_names = ["Blue", "Green", "Red", "Near-Infrared"]
 
+    wavelengths = [
+        490,
+        565,
+        665,
+        856
+    ]
+
     @property
     def rgb(self):
         return self.bands[[2, 1, 0], :, :]

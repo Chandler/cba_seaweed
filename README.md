@@ -9,13 +9,13 @@ This is a small project to examine some seaweed farms using data from Planet Lab
 
 The code is factored in a way so that all visualizations can be applied to any farm. The Scene classes factor out the differences between planet 4 and 8 band products so they can be used interchangeably.
 
-code quality note: this was written fairly quickly to balance code quality and results - docstrings, type annotations, comments and general code factoring could all still improve.
+Code quality note: this was written fairly quickly to balance code quality and results - docstrings, type annotations, comments and general code factoring could all still improve.
 
-# papers I found useful
+# Papers I found useful
 
-- [The Utility of Satellites and Autonomous Remote Sensing Platforms for Monitoring Offshore Aquaculture Farms: A Case Study for Canopy Forming Kelps](https://www.frontiersin.org/articles/10.3389/fmars.2020.520223/full)
+- [1] [The Utility of Satellites and Autonomous Remote Sensing Platforms for Monitoring Offshore Aquaculture Farms: A Case Study for Canopy Forming Kelps](https://www.frontiersin.org/articles/10.3389/fmars.2020.520223/full)
 
-- [Economic and biophysical limits to seaweed farming for climate change mitigation](https://www.nature.com/articles/s41477-022-01305-9)
+- [2] [Economic and biophysical limits to seaweed farming for climate change mitigation](https://www.nature.com/articles/s41477-022-01305-9)
 
 
 # Test Farms
@@ -32,35 +32,36 @@ code quality note: this was written fairly quickly to balance code quality and r
     - harvest date: April 17, 2020
 
 # Project
-Given that I am new to seaweed science, my goal was to get a brief intuitive and quantitative grasp on what can be learned about seaweed from planet labs 3-5 meter per pixel multi-spectral data.
+My goal was to get a intuitive and quantitative grasp on what can be learned about North American seaweed farms from planet labs 3-5 meter per pixel multi-spectral data.
 
-See the end for the [aquafort](#Aquafort) analysis.
+I was provided with a datasheet of kelp mass for different Aquafort harvests, I did not pursue trying to align this data with the satellite imagery due to the small size of the Aquafort, I did not believe there was enough signal to do meaningful analysis. See the end for the [aquafort](#aquafort) analysis.
 
 # Results
 
-## setup
-A quick look at an RGB frame of scott's farm in photoshop (color corrected and sharpened) shows that the patch is decent sized for this imagery
+A quick look at an RGB frame of Scott's farm in photoshop (color corrected and sharpened) shows that the patch is decent sized for this imagery
 
 <img src="./images/scott_crop.png" alt="grid" width="400"/>
 
+The full planet frames are several km across and very large files.
 
-The full planet frames are several km across and very large files, a good first step is to grab a quick bounding box of the region from geojson.io and use that to crop the images into something more workable.
-
-(Note, this is not the planet RBG product it is the 8 band multispectral product with the RGB bands extracted and colored corrected. This simple process is a lot quicker and gives you more control than downloading both products)
+(Note, this is not the planet official RBG product it is the 8 band multi-spectral product with the RGB bands extracted and colored corrected. This simple process is a lot quicker and gives you more control than downloading both products)
 
 ![full](./images/scott_full_frame.png)
 
+A good first step is to grab a quick bounding box of the region from geojson.io and use that to crop the images into something more workable.
+
+
 <img src="./images/scott_polygon.png" alt="grid" width="400"/>
 
-## timeseries
+## Timeseries
 
 Now we can process all of the frames for our duration to see that the size of the patch evolves over time. It's especially visible in NDVI
 
 ![farm](./images/scott_farm.gif)
 
-The progression here is hopeful for monitoring seaweed mass throughout its farm lifecycle.
+The progression here is hopeful for monitoring seaweed mass throughout its farm life-cycle.
 
-## spectral bands
+## Spectral bands
 
 Although the NDVI looks nice, I wanted to get an understanding of which spectral bands could best discriminate the seaweed from the water.
 
@@ -80,12 +81,46 @@ Looking at the object/ocean mean values over wavelength we can see the ocean and
 
 <img src="./images/scott_spectra.png" alt="grid" width="400"/>
 
-for reference lab tests of giant kelp show this reflectance spectrum
+For reference lab tests of giant kelp show this reflectance spectrum [1]
 
 <img src="./images/lab_spectra.png" alt="grid" width="400"/>
 
+# Chandler Cove
+
+I did not do new analysis on this farm, however I was pleased that the code base was able to process the dataset without modification. This harvest dates to 2020 and therefore no 8 band captures exist, only 4 band. The scene.py code smooths over these differences to enable reusability in the visualization code.
+
+![farm](./images/chandler_cove.gif)
+
 
 # Aquafort
+
+The aquafort is a 20x50ft (6x15meter) platform for aquaculture, readily visible on google maps high res.
+
+<img src="./images/aquafort_highres.png" alt="grid" width="500"/>
+
+
+Planet labs imagery is sampled at 3 meters/pixel, even though its true geometric accuracy lies around 5 meters/pixel. This means the aquafort is sampled around 2x5 pixels on a good day.
+
+It is very hard to make it out in visible or NDVI.
+
+![farm](./images/aquafort1.jpg)
+
+Aquafort was particularly visible in one frame, dated may 18th 2023. However an analysis of the per-band discrimination chart shows that it is visible in nearly every band. This could be explained by a specular reflection of sunlight off the object structure. It does not seem like any vegetative signal is present.
+
+
+![grid](./images/aquafort_band_descrimination_grid.png)
+
+In order to get the best view possible of a small object, we can inspect a raw analytic frame and slightly sharpen it. Let's look at NIR
+
+![grid](./images/aquafort_sharpened.png)
+
+Beautiful
+
+![grid](./images/aquafort_pixels.png)
+
+
+
+
 
 
 

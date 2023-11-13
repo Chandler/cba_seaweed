@@ -16,12 +16,10 @@ def visualize_collection(scene_collection, outdir):
         wp, _ = util.white_and_black_points([scene.rgb], white_percentile=99.9)
 
         # crop the scene
-        # scene = scene.mask_with_poly(scene_collection.area_outline, crop=True)
+        scene = scene.mask_with_poly(scene_collection.area_outline, crop=True)
 
         # make a visual RGB
         rgb = scene.balanced_rgb(white_points=wp, black_points=[0,0,0])
-
-        util.write_RGB_geotiff(rgb, f"{outdir}/big/{scene.name}.ndvi.jpg")
 
         # make an NDVI
         ndvi = scene.colorized_ndvi()
@@ -31,7 +29,7 @@ def visualize_collection(scene_collection, outdir):
 
         # write the date onto the final result and save as jpeg
         date = scene.metadata["properties"]["acquired"].split('T')[0]
-        util.write_RGB_jpeg(rgb, f"{outdir}/ndvi/{scene.name}.ndvi.jpg", label=date)
+        util.write_RGB_jpeg(combined, f"{outdir}/ndvi/{scene.name}.ndvi.jpg", label=date)
 
 
 def visualize_band_descrimination(scene, segmentation_mask, polygon, outdir):
@@ -163,29 +161,29 @@ def timeseries(scene_collection, outdir):
 
 project_dir = "/Users/cbabraham/Dropbox/code/seaweed"
 
-scott_lord = SceneCollection.load(
-    name="scott_lord",
-    captures_dir=f"{project_dir}/data/scott_lord/april_june_2022",
-    reference_mask=f"{project_dir}/data/scott_lord/april_june_2022/20220514_150542_32_2480_3B_AnalyticMS_8b_mask.png",
-    area_outline=f"{project_dir}/data/scott_lord/area_outline.json",
-    reference_scene_id="20220514_150542_32_2480",
+# scott_lord = SceneCollection.load(
+#     name="scott_lord",
+#     captures_dir=f"{project_dir}/data/scott_lord/april_june_2022",
+#     reference_mask=f"{project_dir}/data/scott_lord/april_june_2022/20220514_150542_32_2480_3B_AnalyticMS_8b_mask.png",
+#     area_outline=f"{project_dir}/data/scott_lord/area_outline.json",
+#     reference_scene_id="20220514_150542_32_2480",
+# )
+
+chandler_cove = SceneCollection.load(
+    name="chandler_cove",
+    captures_dir=f"{project_dir}/data/chandler_cove/feb_april_2020",
+    reference_mask=f"{project_dir}/data/chandler_cove/feb_april_2020/20200316_145828_0e26_3B_AnalyticMS_mask.png",
+    area_outline=f"{project_dir}/data/chandler_cove/area_outline.json",
+    reference_scene_id="20200316_145828_0e26",
 )
 
-# chandler_cove = SceneCollection.load(
-#     name="chandler_cove",
-#     captures_dir=f"{project_dir}/data/chandler_cove/feb_april_2020",
-#     reference_mask=f"{project_dir}/data/chandler_cove/feb_april_2020/20200316_145828_0e26_3B_AnalyticMS_mask.png",
-#     area_outline=f"{project_dir}/data/chandler_cove/area_outline.json",
-#     reference_scene_id="20200316_145828_0e26",
-# )
-
-# aquafort = SceneCollection.load(
-#     name="aquafort",
-#     captures_dir=f"{project_dir}/data/aquafort/may_june_2023",
-#     reference_mask=f"{project_dir}/data/aquafort/may_june_2023/20230518_144318_14_24bf_3B_AnalyticMS_8b_mask.png",
-#     area_outline=f"{project_dir}/data/aquafort/area_outline.json",
-#     reference_scene_id="20230518_144318_14_24bf",
-# )
+aquafort = SceneCollection.load(
+    name="aquafort",
+    captures_dir=f"{project_dir}/data/aquafort/may_june_2023",
+    reference_mask=f"{project_dir}/data/aquafort/may_june_2023/20230518_144318_14_24bf_3B_AnalyticMS_8b_mask.png",
+    area_outline=f"{project_dir}/data/aquafort/area_outline.json",
+    reference_scene_id="20230518_144318_14_24bf",
+)
 
 #--------
 
@@ -197,16 +195,15 @@ def run_projects(scene_collection):
     
     # timeseries(scene_collection, outdir)
 
+    visualize_band_descrimination(
+        scene_collection.reference_scene,
+        scene_collection.reference_mask,
+        scene_collection.area_outline,
+        outdir
+    )
 
-    # visualize_band_descrimination(
-    #     scene_collection.reference_scene,
-    #     scene_collection.reference_mask,
-    #     scene_collection.area_outline,
-    #     outdir
-    # )
 
-
-run_projects(scott_lord)
+run_projects(aquafort)
 
 
 
