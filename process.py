@@ -1,9 +1,7 @@
-from scene import SceneCollection, SegmentationMask
+from scene import SceneCollection
 import util
 import numpy as np
-import math
 import matplotlib.pyplot as plt
-from datetime import datetime
 
 def visualize_collection(scene_collection, outdir):
     """

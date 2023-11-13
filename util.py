@@ -1,14 +1,11 @@
 import rasterio
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
 from PIL import Image
 import os
 import PIL.Image as Image
-from PIL import ImageEnhance
 import json
 from rasterio.mask import mask
-from shapely.geometry import shape
 import geopandas as gpd
 from PIL import Image
 from rasterio import MemoryFile
@@ -16,8 +13,6 @@ import matplotlib.cm as cm
 from matplotlib.colors import Normalize
 from matplotlib import pyplot as plt
 import numpy as np
-from rasterio.io import DatasetReader
-from rasterio.transform import Affine
 from PIL import ImageDraw, ImageFont
 
 def mkdir(path):
