@@ -18,7 +18,7 @@ def visualize_collection(scene_collection, outdir):
         # crop the scene
         scene = scene.mask_with_poly(scene_collection.area_outline, crop=True)
 
-        # make a visual RGB
+        # make a visual RGB, hardcode blackpoint to 0
         rgb = scene.balanced_rgb(white_points=wp, black_points=[0,0,0])
 
         # make an NDVI
@@ -106,68 +106,15 @@ def visualize_band_descrimination(scene, segmentation_mask, polygon, outdir):
     plt.title('Time series chart')
     plt.savefig(f"{outdir}/reflectance.png")
 
-def timeseries(scene_collection, outdir):
-    util.mkdir(outdir)
-
-    mask = scene_collection.reference_mask.mask
-    ref = scene_collection.reference_scene
-    polygon = scene_collection.area_outline
-    masked_mask,_ = util.mask_image(
-        mask,
-        polygon,
-        ref.dataset.crs,
-        ref.dataset.transform
-    )
-    segmentation_mask = SegmentationMask(masked_mask)
-
-    images = []
-    labels = []
-    object_means = []
-    surround_means = []
-    date_strings = []
-
-    for scene in scene_collection.scenes:
-        acquired = scene.metadata["properties"]["acquired"]
-        
-        scene = scene.mask_with_poly(scene_collection.area_outline, crop=True)
- 
-        band = scene.bands[7]
-        object_pixels = segmentation_mask.object_pixels(band)
-        surround_pixels = segmentation_mask.surround_pixels(band)
-        
-        snr = util.compute_snr(object_pixels, surround_pixels)
-        print(f"{acquired} - SNR: {snr}")
-        images.append(band)
-        labels.append(f"{acquired} -- {snr}")
-
-
-        date_object = datetime.strptime(acquired, '%Y-%m-%dT%H:%M:%S.%fZ')
-        date_strings.append(date_object)
-        object_means.append(object_pixels.mean())
-        surround_means.append(surround_pixels.mean())
-
-    # util.plot_images(images, labels, 4)
-
-    #Time series chart
-    fig, ax = plt.subplots()
-    ax.plot(date_strings, object_means, label='Object Mean')
-    ax.plot(date_strings, surround_means, label='Surround Mean')
-    ax.legend()
-
-    plt.xlabel('Date')
-    plt.ylabel('Mean value')
-    plt.title('Time series chart')
-    plt.show()
-
 project_dir = "/Users/cbabraham/Dropbox/code/seaweed"
 
-# scott_lord = SceneCollection.load(
-#     name="scott_lord",
-#     captures_dir=f"{project_dir}/data/scott_lord/april_june_2022",
-#     reference_mask=f"{project_dir}/data/scott_lord/april_june_2022/20220514_150542_32_2480_3B_AnalyticMS_8b_mask.png",
-#     area_outline=f"{project_dir}/data/scott_lord/area_outline.json",
-#     reference_scene_id="20220514_150542_32_2480",
-# )
+scott_lord = SceneCollection.load(
+    name="scott_lord",
+    captures_dir=f"{project_dir}/data/scott_lord/april_june_2022",
+    reference_mask=f"{project_dir}/data/scott_lord/april_june_2022/20220514_150542_32_2480_3B_AnalyticMS_8b_mask.png",
+    area_outline=f"{project_dir}/data/scott_lord/area_outline.json",
+    reference_scene_id="20220514_150542_32_2480",
+)
 
 chandler_cove = SceneCollection.load(
     name="chandler_cove",
@@ -193,15 +140,12 @@ def run_projects(scene_collection):
 
     visualize_collection(scene_collection, outdir)
     
-    # timeseries(scene_collection, outdir)
-
     visualize_band_descrimination(
         scene_collection.reference_scene,
         scene_collection.reference_mask,
         scene_collection.area_outline,
         outdir
     )
-
 
 run_projects(aquafort)
 
