@@ -201,6 +201,10 @@ class SceneCollection:
         self.name = name
         self.scenes = scenes
         self.area_outline = area_outline
+
+        # the reference scene is a single scene in the collection that
+        # has a mask associated with it, useful for the visualizations
+        # that operate on a single frame.
         self.reference_index = reference_index
         self.reference_mask = reference_mask
 
