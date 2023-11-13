@@ -9,7 +9,7 @@ This is a small project to examine some seaweed farms using data from Planet Lab
 
 The code is factored in a way so that all visualizations can be applied to any farm. The Scene classes factor out the differences between planet 4 and 8 band products so they can be used interchangeably.
 
-Code quality note: this was written fairly quickly to balance code quality and results - docstrings, type annotations, comments and general code factoring could all still improve.
+Code quality note: this was written fairly quickly to balance code quality and results. Docstrings, type annotations, comments and general code factoring could all still improve.
 
 # Papers I found useful
 
@@ -38,7 +38,7 @@ I was provided with a datasheet of kelp mass for different Aquafort harvests, I 
 
 # Results
 
-A quick look at an RGB frame of Scott's farm in photoshop (color corrected and sharpened) shows that the patch is decent sized for this imagery
+A quick look at an RGB frame of Scott's farm in photoshop (color corrected and sharpened) shows that the patch is easily visible in Planet's RGB imagery.
 
 <img src="./images/scott_crop.png" alt="grid" width="400"/>
 
@@ -49,7 +49,6 @@ The full planet frames are several km across and very large files.
 ![full](./images/scott_full_frame.png)
 
 A good first step is to grab a quick bounding box of the region from geojson.io and use that to crop the images into something more workable.
-
 
 <img src="./images/scott_polygon.png" alt="grid" width="400"/>
 
@@ -64,8 +63,6 @@ The progression here is hopeful for monitoring seaweed mass throughout its farm 
 ## Spectral bands
 
 Although the NDVI looks nice, I wanted to get an understanding of which spectral bands could best discriminate the seaweed from the water.
-
-Several labs have measured kelp spectra 
 
 To do this I took the brightest patch into photoshop and made a quick segmentation mask, white = seaweed, gray = surrounding ocean, black = ignore
 
